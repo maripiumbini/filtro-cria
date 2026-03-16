@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content-News - Inteligência em Tempo Real</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Georgia:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #fff8f5; color: #2b2b2b; font-family: 'Fira Code', monospace; scroll-behavior: smooth; }
+        h1, h2, h3, h4, .font-georgia { font-family: 'Georgia', serif; }
+        .text-vinho { color: #86143d; }
+        .bg-vinho { background-color: #86143d; }
+        .text-azul { color: #a0c4e8; }
+        .bg-azul { background-color: #a0c4e8; }
+        
+        .card { background: #ffffff; border: 1px solid #2b2b2b; transition: all 0.3s ease; }
+        .card:hover { transform: translateY(-4px); box-shadow: 8px 8px 0px #86143d; }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #86143d;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .trend-meter { height: 12px; background: #eee; border-radius: 10px; overflow: hidden; }
+        .trend-progress { height: 100%; background: linear-gradient(90deg, #a0c4e8, #86143d); transition: width 2s ease-in-out; }
+
+        .hook-box { background: #fffcfb; border: 1px dashed #86143d; padding: 1rem; position: relative; }
+        .hook-label { position: absolute; top: -10px; left: 10px; background: #86143d; color: white; font-size: 8px; padding: 2px 8px; font-weight: bold; }
+    </style>
+</head>
+<body class="antialiased p-4 md:p-8">
+
+<div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <header class="text-center mb-16">
+        <div class="inline-block border-2 border-vinho px-4 py-1 text-[10px] font-bold uppercase tracking-[0.4em] mb-4 text-vinho">
+            Automated Trend Intelligence
+        </div>
+        <h1 class="text-6xl md:text-8xl font-bold text-vinho mb-4 uppercase tracking-tighter">Content-News</h1>
+        <p class="text-xl font-georgia italic text-gray-600">O seu radar automático de ganchos virais e tendências.</p>
+    </header>
+
+    <!-- Motor de Busca Principal -->
+    <section class="mb-16">
+        <div class="card p-8 md:p-16 relative overflow-hidden bg-white text-center">
+            <h2 class="text-3xl font-georgia mb-8 text-[#2b2b2b]">O que vamos monitorizar agora?</h2>
+            
+            <div class="max-w-3xl mx-auto flex flex-col md:flex-row gap-2">
+                <input type="text" id="topicInput" placeholder="Nicho, Marca ou Tecnologia (ex: IA no Varejo)" 
+                    class="flex-1 p-5 border-2 border-[#2b2b2b] outline-none focus:bg-white bg-[#fff8f5] text-lg font-fira">
+                <button onclick="startAutomaticScan()" id="scanBtn" class="bg-vinho text-white px-12 py-5 font-bold uppercase tracking-widest hover:bg-black transition-all flex items-center justify-center gap-2">
+                    SCAN WEB ✨
+                </button>
+            </div>
+            <p class="mt-4 text-[10px] text-gray-400 uppercase tracking-widest">Acesso direto ao Google Search Engine via Gemini 2.5 Flash</p>
+        </div>
+    </section>
+
+    <!-- Loading State -->
+    <div id="loaderArea" class="hidden flex flex-col items-center py-20 animate-fade">
+        <div class="loader mb-6"></div>
+        <p class="text-xs font-bold uppercase tracking-[0.3em] text-vinho animate-pulse">Varrendo a web em busca de sinais...</p>
+    </div>
+
+    <!-- Results Area -->
+    <div id="resultsArea" class="hidden space-y-16 pb-24">
+        
+        <!-- Trends Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="card p-8 flex flex-col justify-center border-t-8 border-azul">
+                <h4 class="text-[10px] font-bold text-gray-400 uppercase mb-4 tracking-widest">Temperatura do Tópico</h4>
+                <div id="trendValue" class="text-6xl font-bold text-vinho mb-4">--</div>
+                <div class="trend-meter"><div id="trendBar" class="trend-progress" style="width: 0%"></div></div>
+                <p class="text-[11px] text-gray-500 mt-4 italic">Interesse relativo global detetado agora.</p>
+            </div>
+
+            <div class="card p-8 md:col-span-2">
+                <h4 class="text-[10px] font-bold text-gray-400 uppercase mb-6 tracking-widest">Nuvem de Contexto Estratégico</h4>
+                <div id="keywordsArea" class="flex flex-wrap gap-3">
+                    <!-- Keywords injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- News Feed -->
+        <div class="space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-vinho pb-4">
+                <h3 class="text-3xl font-georgia italic font-bold text-vinho">Janelas de Oportunidade</h3>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Live Feed</span>
+            </div>
+            
+            <div id="newsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cards injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Standby Message -->
+    <div id="standbyArea" class="text-center py-32 border-2 border-dashed border-gray-200 rounded-lg">
+        <p class="text-gray-300 italic font-georgia text-2xl">Aguardando comando para iniciar o rastreio...</p>
+    </div>
+
+    <!-- Footer CTA -->
+    <section class="mt-12 mb-24">
+        <div class="bg-vinho p-10 md:p-16 text-white flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
+            <div class="z-10 text-center md:text-left">
+                <h4 class="text-4xl font-georgia font-bold mb-2 italic">Mariana Piumbini</h4>
+                <p class="opacity-80 font-fira text-sm">Marketing, IA e Produtividade em escala real.</p>
+            </div>
+            <a href="https://www.linkedin.com/in/marianapiumbini/" target="_blank" class="z-10 bg-white text-vinho px-10 py-4 font-bold uppercase text-xs tracking-widest hover:bg-azul hover:text-white transition-all">
+                Acompanhar no LinkedIn ↗
+            </a>
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
+        </div>
+    </section>
+</div>
+
+<script>
+// A apiKey é injetada automaticamente pelo ambiente Vercel/Preview
+const apiKey = ""; 
+
+async function fetchWithRetry(url, options, maxRetries = 5) {
+    let delay = 1000;
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return await response.json();
+        } catch (err) { if (i === maxRetries - 1) throw err; }
+        await new Promise(res => setTimeout(res, delay));
+        delay *= 2;
+    }
+}
+
+async function startAutomaticScan() {
+    const input = document.getElementById('topicInput').value.trim();
+    if (!input) return;
+
+    const loader = document.getElementById('loaderArea');
+    const results = document.getElementById('resultsArea');
+    const standby = document.getElementById('standbyArea');
+    const btn = document.getElementById('scanBtn');
+
+    loader.classList.remove('hidden');
+    results.classList.add('hidden');
+    standby.classList.add('hidden');
+    btn.disabled = true;
+
+    try {
+        const systemPrompt = `Você é Mariana Piumbini, analista de tendências de elite. 
+        Sua missão é usar obrigatoriamente a ferramenta Google Search para encontrar as notícias mais quentes de hoje sobre o tópico solicitado.
+        Formate a saída rigorosamente como JSON:
+        {
+          "volume": 85,
+          "tags": ["keyword1", "keyword2", "keyword3"],
+          "noticias": [
+            {
+              "titulo": "manchete real encontrada",
+              "veiculo": "fonte",
+              "data": "hoje",
+              "url": "link real",
+              "insight": "breve análise C.R.I.A.",
+              "hook": "um gancho de post viral para LinkedIn"
+            }
+          ]
+        }`;
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const response = await fetchWithRetry(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `Pesquisa notícias e tendências de agora sobre: ${input}` }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                tools: [{ "google_search": {} }],
+                generationConfig: { responseMimeType: "application/json", temperature: 0.7 }
+            })
+        });
+
+        const data = JSON.parse(response.candidates[0].content.parts[0].text);
+        renderContent(data);
+        
+        loader.classList.add('hidden');
+        results.classList.remove('hidden');
+    } catch (e) {
+        console.error(e);
+        standby.innerHTML = `<p class="text-red-500 font-bold uppercase">Erro na Conexão. Verifique sua chave de API.</p>`;
+        standby.classList.remove('hidden');
+        loader.classList.add('hidden');
+    }
+    btn.disabled = false;
+}
+
+function renderContent(data) {
+    // Volume Trend
+    document.getElementById('trendValue').innerText = data.volume + "%";
+    document.getElementById('trendBar').style.width = data.volume + "%";
+
+    // Tags
+    const tagsArea = document.getElementById('keywordsArea');
+    tagsArea.innerHTML = data.tags.map(t => `<span class="bg-azul/10 text-azul border border-azul/30 px-4 py-2 text-[10px] font-bold uppercase tracking-widest">#${t}</span>`).join('');
+
+    // Grid
+    const grid = document.getElementById('newsGrid');
+    grid.innerHTML = data.noticias.map(n => `
+        <div class="news-card p-8 flex flex-col bg-white">
+            <div class="flex justify-between items-start mb-6">
+                <span class="text-[10px] font-bold text-azul uppercase tracking-[0.2em]">${n.veiculo}</span>
+                <span class="text-[10px] text-gray-300 font-fira">${n.data}</span>
+            </div>
+            <h4 class="text-xl font-bold mb-6 font-georgia leading-tight text-vinho">${n.titulo}</h4>
+            
+            <div class="hook-box mb-6">
+                <span class="hook-label">HOOK ESTRATÉGICO</span>
+                <p class="text-[12px] text-gray-800 italic leading-relaxed font-georgia">"${n.hook}"</p>
+            </div>
+            
+            <p class="text-[11px] text-gray-500 mb-8 leading-relaxed">${n.insight}</p>
+            
+            <a href="${n.url}" target="_blank" class="mt-auto text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-vinho transition-colors">
+                Ver Fonte Original →
+            </a>
+        </div>
+    `).join('');
+}
+</script>
+
+</body>
+</html>
