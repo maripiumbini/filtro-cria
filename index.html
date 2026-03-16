@@ -1,252 +1,339 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Filtro C.R.I.A. - Mariana Piumbini</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-<style>
-body {
-    background-color: #fff8f5;
-    color: #2b2b2b;
-    font-family: 'Fira Code', monospace;
-}
-h1, h2, h3, h4, .font-georgia {
-    font-family: 'Georgia Pro Condensed', Georgia, serif;
-}
-.text-vinho { color: #86143d; }
-.bg-vinho { background-color: #86143d; }
-.text-azul { color: #a0c4e8; }
-.bg-azul { background-color: #a0c4e8; }
-.border-vinho { border-color: #86143d; }
-.border-azul { border-color: #a0c4e8; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro C.R.I.A. - Mentoria Estratégica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fff8f5;
+            color: #2b2b2b;
+            font-family: 'Fira Code', monospace;
+        }
+        h1, h2, h3, h4, .font-georgia {
+            font-family: 'Georgia Pro Condensed', Georgia, serif;
+        }
+        .text-vinho { color: #86143d; }
+        .bg-vinho { background-color: #86143d; }
+        .text-azul { color: #a0c4e8; }
+        .bg-azul { background-color: #a0c4e8; }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            height: 300px;
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid #2b2b2b;
+        }
+        .step-item {
+            border-left: 4px solid #86143d;
+            padding-left: 1.25rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .step-item::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 0;
+            height: 20px;
+            width: 4px;
+            background: #a0c4e8;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #86143d;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .framework-arrow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #d1d5db;
+            font-size: 1.5rem;
+            margin: 0.5rem 0;
+        }
 
-.chart-container {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    height: 350px;
-    max-height: 400px;
-}
-.card {
-    background: #ffffff;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    border: 1px solid #2b2b2b;
-}
-.flow-arrow {
-    font-size: 2rem;
-    color: #2b2b2b;
-    text-align: center;
-    margin: 1rem 0;
-}
-.loader {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #86143d;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
-    display: inline-block;
-    vertical-align: middle;
-}
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Efeito de brilho para indicar IA Local */
-.ai-active {
-    box-shadow: 0 0 15px rgba(160, 196, 232, 0.5);
-}
-</style>
+        .linkedin-cta {
+            background: linear-gradient(90deg, #86143d 0%, #2b2b2b 100%);
+        }
+    </style>
 </head>
 <body class="antialiased p-4 md:p-8">
 
 <div class="max-w-5xl mx-auto">
-    
-    <header class="text-center mb-12 mt-4">
+    <header class="text-center mb-16">
         <h1 class="text-5xl md:text-7xl font-bold text-vinho mb-4 uppercase">FILTRO C.R.I.A.</h1>
-        <p class="text-xl md:text-2xl font-georgia mb-6 text-[#2b2b2b]">Humano vs IA: Onde investir o seu tempo?</p>
+        <p class="text-xl md:text-2xl font-georgia mb-6 text-[#2b2b2b]">Mentoria de Execução & Inteligência Artificial</p>
         <div class="w-24 h-1 bg-vinho mx-auto mb-6"></div>
-        <p class="text-lg max-w-2xl mx-auto">A IA não substitui quem pensa. <br><span class="font-bold italic">Substitui o tempo que você gasta sem pensar.</span></p>
     </header>
 
-    <!-- Simulador Principal com Motor Local -->
-    <section class="mb-16">
-        <div class="card p-6 md:p-8 border-2 border-vinho bg-white relative overflow-hidden ai-active">
-            <div class="absolute top-0 right-0 bg-azul text-[#2b2b2b] text-[10px] px-3 py-1 font-bold uppercase tracking-widest">Motor C.R.I.A. Local ⚡</div>
+    <!-- Simulador de IA Reforçado -->
+    <section class="mb-20">
+        <div class="card p-6 md:p-12 border-2 border-vinho relative overflow-hidden">
+            <div class="absolute top-0 right-0 bg-vinho text-white text-[10px] px-4 py-1 font-bold uppercase tracking-widest">Consultoria de Elite Ativa ✨</div>
             
-            <h2 class="text-3xl font-georgia mb-4 text-vinho">Analisador Inteligente ✨</h2>
-            <p class="mb-6 text-sm text-gray-600 font-fira">Introduza uma tarefa e o motor local irá classificá-la instantaneamente.</p>
+            <h2 class="text-3xl font-georgia mb-4 text-vinho">Qual é o seu próximo grande projeto?</h2>
+            <p class="mb-8 text-sm text-gray-600 font-fira leading-relaxed">Não damos apenas uma resposta rasa. Introduza a sua ideia e receba um diagnóstico estratégico completo baseado no framework Mariana Piumbini.</p>
             
-            <div class="flex flex-col md:flex-row gap-3 mb-6">
-                <input type="text" id="taskInput" placeholder="Ex: Escrever um artigo com a minha opinião sobre..." class="flex-1 p-4 border border-[#2b2b2b] rounded font-fira bg-[#fff8f5] focus:ring-2 focus:ring-vinho outline-none transition-all">
-                <button onclick="analyzeTaskLocal()" id="analyzeBtn" class="bg-vinho text-white px-8 py-4 font-bold uppercase hover:bg-black transition-all flex items-center justify-center gap-2">
-                    Analisar Agora
+            <div class="flex flex-col md:flex-row gap-4 mb-10">
+                <input type="text" id="taskInput" placeholder="Ex: Criar uma esteira de conteúdo autoral para 30 dias..." 
+                       class="flex-1 p-5 border-2 border-gray-200 rounded-none font-fira bg-[#fff8f5] focus:border-vinho outline-none transition-all text-lg">
+                <button onclick="analyzeTask()" id="analyzeBtn" class="bg-vinho text-white px-10 py-5 font-bold uppercase hover:bg-black transition-all flex items-center justify-center gap-3 shadow-lg">
+                    Gerar Plano ✨
                 </button>
             </div>
 
-            <!-- Exemplos -->
-            <div class="flex flex-wrap gap-2 mb-8">
-                <button onclick="setTask('Dar opinião num post polémico sobre marketing')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Opinião Pessoal</button>
-                <button onclick="setTask('Traduzir este texto para 5 línguas diferentes')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Tradução em Massa</button>
-                <button onclick="setTask('Gerar 10 ideias de títulos para uma newsletter')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Brainstorming</button>
-                <button onclick="setTask('Agendar todos os posts no LinkedIn para o mês')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Automação</button>
+            <!-- Área de Resultado Estratégico -->
+            <div id="resultArea" class="hidden animate-fade-in">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pt-10 border-t-2 border-gray-100">
+                    
+                    <div class="md:col-span-4 space-y-6">
+                        <div class="p-8 bg-[#fff8f5] border-t-4 border-vinho rounded-sm shadow-sm text-center md:text-left">
+                            <div class="text-[10px] uppercase font-bold text-gray-400 mb-3 tracking-[0.2em]">Diagnóstico de Categoria</div>
+                            <h3 id="resCategory" class="text-7xl font-bold text-vinho mb-2 font-georgia"></h3>
+                            <p id="resTitle" class="text-lg font-bold uppercase tracking-tight mb-4 text-[#2b2b2b]"></p>
+                            <p id="resExplanation" class="text-xs text-gray-600 leading-relaxed font-fira"></p>
+                        </div>
+                        
+                        <div class="p-6 border border-azul/30 rounded-sm">
+                            <h4 class="text-[10px] font-bold uppercase text-azul mb-2 tracking-widest">Aposta Estratégica</h4>
+                            <p id="resStrategy" class="text-[11px] text-gray-500 leading-relaxed italic"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-8 p-8 bg-white border border-gray-100 rounded-sm">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="text-[10px] uppercase font-bold text-gray-400 tracking-[0.2em]">Roteiro de Implementação ✨</div>
+                            <span class="text-[9px] bg-gray-100 px-2 py-1 text-gray-400 uppercase">Foco: Eficiência Máxima</span>
+                        </div>
+                        <div id="resActionPlan" class="space-y-6 font-fira"></div>
+                    </div>
+                </div>
             </div>
 
-            <div id="resultArea" class="hidden">
-                <div class="p-6 rounded border border-[#2b2b2b] bg-[#fff8f5] transition-all">
-                    <div id="loadingIndicator" class="hidden text-center py-4">
-                        <div class="loader mr-2"></div> O motor está a processar...
-                    </div>
-                    <div id="analysisContent">
-                        <h3 id="resultCategory" class="text-2xl font-bold mb-2 text-vinho"></h3>
-                        <p id="resultExplanation" class="text-gray-700 italic mb-4 leading-relaxed"></p>
-                        <div class="text-[10px] uppercase tracking-widest text-azul font-bold">Classificado por Algoritmo de Mariana Piumbini</div>
-                    </div>
+            <div id="loader" class="hidden text-center py-20">
+                <div class="loader mx-auto mb-6"></div>
+                <p class="text-xs font-bold uppercase tracking-[0.3em] text-vinho animate-pulse">Processando Inteligência de Negócio...</p>
+            </div>
+            
+            <div id="errorMsg" class="hidden mt-6 p-6 bg-red-50 text-red-600 text-xs text-center border border-red-100"></div>
+        </div>
+    </section>
+
+    <!-- Framework Visual -->
+    <section class="mb-20">
+        <h2 class="text-4xl font-georgia text-center mb-12 text-[#2b2b2b]">O Framework Estratégico</h2>
+        <div class="max-w-3xl mx-auto space-y-4">
+            <div class="card p-6 border-l-8 border-vinho flex gap-6 items-center">
+                <div class="text-6xl font-bold text-vinho opacity-80 font-georgia w-20 text-center">C</div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold uppercase mb-1">Criatividade</h3>
+                    <p class="text-xs text-gray-600">Onde a sua alma e estratégia mandam. Insubstituível.</p>
+                </div>
+            </div>
+            <div class="framework-arrow">↓</div>
+            <div class="card p-6 border-l-8 border-azul flex gap-6 items-center">
+                <div class="text-6xl font-bold text-azul opacity-80 font-georgia w-20 text-center">R</div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold uppercase mb-1">Repetição</h3>
+                    <p class="text-xs text-gray-600">Transformação de formatos e escalas. Trabalho de IA.</p>
+                </div>
+            </div>
+            <div class="framework-arrow">↓</div>
+            <div class="card p-6 border-l-8 border-vinho flex gap-6 items-center">
+                <div class="text-6xl font-bold text-vinho opacity-80 font-georgia w-20 text-center">I</div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold uppercase mb-1">Inteligência</h3>
+                    <p class="text-xs text-gray-600">Co-criação acelerada. Onde humano e máquina convergem.</p>
+                </div>
+            </div>
+            <div class="framework-arrow">↓</div>
+            <div class="card p-6 border-l-8 border-azul bg-[#2b2b2b] text-white flex gap-6 items-center">
+                <div class="text-6xl font-bold text-azul opacity-80 font-georgia w-20 text-center">A</div>
+                <div class="flex-1">
+                    <h3 class="text-xl font-bold uppercase mb-1">Ação</h3>
+                    <p class="text-xs text-gray-400">Fluxos invisíveis. Agendamento e processos automáticos.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Visualizações (Chart.js) -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-        <div class="card p-6">
-            <h3 class="text-xl font-georgia font-bold mb-4 text-center">Rotina Sem Filtro</h3>
-            <div class="chart-container"><canvas id="timeChartBefore"></canvas></div>
+    <!-- Gráficos de Comparação com Subtítulo e CTA -->
+    <section class="mb-20">
+        <div class="text-center mb-10">
+            <h2 class="text-4xl font-georgia text-[#2b2b2b] mb-2">A Matemática da Liberdade</h2>
+            <p class="text-sm font-fira text-gray-500 uppercase tracking-widest">Como o Filtro C.R.I.A. redistribui o seu recurso mais escasso: o Tempo.</p>
         </div>
-        <div class="card p-6 border-vinho">
-            <h3 class="text-xl font-georgia font-bold mb-4 text-center text-vinho">Rotina Com C.R.I.A.</h3>
-            <div class="chart-container"><canvas id="timeChartAfter"></canvas></div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+            <div class="card p-6">
+                <h3 class="text-lg font-bold mb-4 text-center uppercase tracking-widest text-gray-400">Rotina Reativa (Sem Filtro)</h3>
+                <div class="chart-container">
+                    <canvas id="chartBefore"></canvas>
+                </div>
+            </div>
+            <div class="card p-6 border-vinho">
+                <h3 class="text-lg font-bold mb-4 text-center text-vinho uppercase tracking-widest">Rotina Estratégica (Com C.R.I.A.)</h3>
+                <div class="chart-container">
+                    <canvas id="chartAfter"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de CTA para LinkedIn -->
+        <div class="linkedin-cta p-6 md:p-8 rounded-sm shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
+            <div class="relative z-10 text-center md:text-left">
+                <h4 class="text-xl font-georgia font-bold mb-1">Gostou deste framework?</h4>
+                <p class="text-xs opacity-80 font-fira">Siga-me no LinkedIn para dominar a Inteligência Artificial e a Marca Pessoal.</p>
+            </div>
+            <a href="https://www.linkedin.com/in/marianapiumbini/" target="_blank" class="relative z-10 bg-white text-vinho px-8 py-3 font-bold uppercase text-xs tracking-widest hover:bg-azul hover:text-white transition-all shadow-lg flex items-center gap-2">
+                Seguir no LinkedIn ↗
+            </a>
+            <!-- Decoração subtil no fundo -->
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
         </div>
     </section>
 
-    <!-- Estrutura do Framework -->
-    <section class="mb-16">
-        <h2 class="text-4xl font-georgia text-center mb-10">O Fluxo de Decisão</h2>
-        <div class="max-w-2xl mx-auto space-y-4">
-            <div class="card p-5 border-l-8 border-vinho flex gap-4 items-center">
-                <span class="text-5xl font-bold text-vinho">C</span>
-                <div><h4 class="font-bold">Criatividade</h4><p class="text-xs">Opinião, estratégia e repertório (Humano).</p></div>
-            </div>
-            <div class="flow-arrow text-gray-300">↓</div>
-            <div class="card p-5 border-l-8 border-azul flex gap-4 items-center">
-                <span class="text-5xl font-bold text-azul">R</span>
-                <div><h4 class="font-bold text-azul">Repetição</h4><p class="text-xs">Adaptação e formatação (IA).</p></div>
-            </div>
-            <div class="flow-arrow text-gray-300">↓</div>
-            <div class="card p-5 border-l-8 border-vinho flex gap-4 items-center">
-                <span class="text-5xl font-bold text-vinho">I</span>
-                <div><h4 class="font-bold">Inteligência</h4><p class="text-xs">Brainstorm e análise (Com IA).</p></div>
-            </div>
-            <div class="flow-arrow text-gray-300">↓</div>
-            <div class="card p-5 border-l-8 border-azul bg-[#2b2b2b] text-white flex gap-4 items-center">
-                <span class="text-5xl font-bold text-azul">A</span>
-                <div><h4 class="font-bold text-azul">Ação</h4><p class="text-xs">Processos e agendamento (Automação).</p></div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="text-center py-12 border-t border-gray-200 mt-12">
-        <p class="text-2xl font-georgia text-vinho font-bold">Mariana Piumbini</p>
-        <p class="uppercase tracking-widest text-[10px] text-gray-500 mb-2">Marketing & Estratégia Digital</p>
-        <p class="text-[9px] text-gray-400">Este site utiliza processamento local. Nenhuma API externa é necessária.</p>
+    <footer class="text-center py-12 border-t border-gray-100">
+        <p class="text-3xl font-georgia text-vinho font-bold mb-2">Mariana Piumbini</p>
+        <p class="text-[10px] uppercase text-gray-400 tracking-widest font-fira text-center">Marketing & Estratégia Digital • IA & Produtividade</p>
     </footer>
 </div>
 
 <script>
-function setTask(text) {
-    document.getElementById('taskInput').value = text;
+const apiKey = ""; 
+
+async function fetchWithRetry(url, options, maxRetries = 5) {
+    let delay = 1000;
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return await response.json();
+        } catch (err) {
+            if (i === maxRetries - 1) throw err;
+        }
+        await new Promise(res => setTimeout(res, delay));
+        delay *= 2;
+    }
 }
 
-/**
- * MOTOR DE INTELIGÊNCIA LOCAL C.R.I.A.
- * Classificador baseado em heurística de NLP para evitar dependência de APIs externas.
- */
-function analyzeTaskLocal() {
-    const task = document.getElementById('taskInput').value.toLowerCase().trim();
-    if (!task) return;
+async function analyzeTask() {
+    const input = document.getElementById('taskInput').value;
+    if (!input) return;
 
+    const loader = document.getElementById('loader');
     const resultArea = document.getElementById('resultArea');
-    const loading = document.getElementById('loadingIndicator');
-    const content = document.getElementById('analysisContent');
+    const errorMsg = document.getElementById('errorMsg');
+    const btn = document.getElementById('analyzeBtn');
 
-    resultArea.classList.remove('hidden');
-    loading.classList.remove('hidden');
-    content.classList.add('hidden');
+    loader.classList.remove('hidden');
+    resultArea.classList.add('hidden');
+    errorMsg.classList.add('hidden');
+    btn.disabled = true;
 
-    // Simula um tempo de "pensamento" para o utilizador
-    setTimeout(() => {
-        let category = "";
-        let explanation = "";
+    const systemPrompt = `És a Mariana Piumbini ou o seu mentor de IA de elite. O teu tom de voz é sofisticado, estratégico, direto e focado em alto impacto de negócio.
+    Analise o pedido do usuário e forneça uma mentoria estratégica profunda.
+    
+    ESTRUTURA DE RESPOSTA (JSON):
+    {
+      "categoria": "Letra (C, R, I ou A)",
+      "titulo": "Um nome magnético para a abordagem",
+      "explicacao": "Análise técnica de porque esta tarefa deve ser tratada desta forma.",
+      "estrategia_macro": "O conselho mestre para otimizar este projeto.",
+      "plano_detalhado": [
+        { "passo": "Estratégia & Fundamento", "descricao": "O que planejar." },
+        { "passo": "Stack Tecnológica", "descricao": "Quais ferramentas e IA usar." },
+        { "passo": "Execução Final", "descricao": "Como finalizar com excelência." }
+      ]
+    }`;
 
-        // Lógica de classificação por palavras-chave
-        const keywords = {
-            c: ['opinião', 'estratégia', 'ângulo', 'posicionamento', 'decisão', 'crítica', 'autoral', 'pessoal', 'visão', 'ética'],
-            r: ['traduzir', 'tradução', 'reformatar', 'resumir', 'resumo', 'transcrever', 'organizar', 'dados', 'limpar', 'converter'],
-            i: ['ideias', 'brainstorm', 'títulos', 'assuntos', 'roteiro', 'estrutura', 'pesquisa', 'análise', 'métricas', 'performance'],
-            a: ['agendar', 'postar', 'publicar', 'calendário', 'email', 'automatizar', 'ferramenta', 'fluxo', 'operação']
-        };
+    try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const data = await fetchWithRetry(url, {
+            method: 'POST',
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: `O projeto é: ${input}.` }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: { responseMimeType: "application/json" }
+            })
+        });
 
-        if (keywords.c.some(k => task.includes(k))) {
-            category = "C - Criatividade (Humano)";
-            explanation = "Esta tarefa exige o teu olhar único, valores e posicionamento. A IA não consegue replicar o teu repertório pessoal.";
-        } else if (keywords.r.some(k => task.includes(k))) {
-            category = "R - Repetição (IA)";
-            explanation = "Tarefa puramente técnica ou de conversão. Delega à IA para poupares a tua energia criativa para o que importa.";
-        } else if (keywords.i.some(k => task.includes(k))) {
-            category = "I - Inteligência (Híbrido)";
-            explanation = "O cenário ideal: tu defines a direção e a IA acelera o processo gerando volume de ideias ou estruturando o caminho.";
-        } else if (keywords.a.some(k => task.includes(k))) {
-            category = "A - Ação (Automação)";
-            explanation = "Isto é operacional puro. Usa ferramentas de automação para que este processo ocorra sem a tua intervenção direta.";
-        } else {
-            category = "C ou I - Análise Necessária";
-            explanation = "Esta tarefa parece envolver uma mistura de estratégia e execução. Avalia se a IA pode estruturar o rascunho antes de dares o teu toque final.";
-        }
-
-        document.getElementById('resultCategory').innerText = category;
-        document.getElementById('resultExplanation').innerText = explanation;
+        const res = JSON.parse(data.candidates[0].content.parts[0].text);
         
-        loading.classList.add('hidden');
-        content.classList.remove('hidden');
-    }, 1000);
+        document.getElementById('resCategory').innerText = res.categoria;
+        document.getElementById('resTitle').innerText = res.titulo;
+        document.getElementById('resExplanation').innerText = res.explicacao;
+        document.getElementById('resStrategy').innerText = res.estrategia_macro;
+        
+        const planContainer = document.getElementById('resActionPlan');
+        planContainer.innerHTML = "";
+        res.plano_detalhado.forEach((item) => {
+            const div = document.createElement('div');
+            div.className = "step-item";
+            div.innerHTML = `
+                <h4 class="text-[11px] font-bold text-vinho uppercase mb-1 tracking-tighter">${item.passo}</h4>
+                <p class="text-[13px] text-[#2b2b2b] leading-relaxed">${item.descricao}</p>
+            `;
+            planContainer.appendChild(div);
+        });
+
+        loader.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+    } catch (err) {
+        loader.classList.add('hidden');
+        errorMsg.innerText = "Houve um erro na comunicação com a IA. Tente novamente.";
+        errorMsg.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+    }
 }
 
 window.onload = function() {
-    const chartOptions = {
+    const commonOptions = {
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        cutout: '70%'
+        plugins: { 
+            legend: { display: false }
+        }
     };
 
-    new Chart(document.getElementById('timeChartBefore'), {
-        type: 'doughnut',
-        data: {
-            labels: ['C', 'R', 'I', 'A'],
-            datasets: [{
-                data: [15, 45, 10, 30],
-                backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'],
-                borderWidth: 0
-            }]
-        },
-        options: chartOptions
-    });
+    const labels = [['C'], ['R'], ['I'], ['A']];
 
-    new Chart(document.getElementById('timeChartAfter'), {
-        type: 'doughnut',
-        data: {
-            labels: ['C', 'R', 'I', 'A'],
-            datasets: [{
-                data: [45, 10, 35, 10],
-                backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'],
-                borderWidth: 0
-            }]
-        },
-        options: chartOptions
-    });
+    const ctxBefore = document.getElementById('chartBefore');
+    const ctxAfter = document.getElementById('chartAfter');
+
+    if (ctxBefore && ctxAfter) {
+        new Chart(ctxBefore, {
+            type: 'doughnut',
+            data: { labels, datasets: [{ data: [15, 45, 10, 30], backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'], borderWidth: 0 }] },
+            options: commonOptions
+        });
+
+        new Chart(ctxAfter, {
+            type: 'doughnut',
+            data: { labels, datasets: [{ data: [45, 10, 35, 10], backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'], borderWidth: 0 }] },
+            options: commonOptions
+        });
+    }
 }
 </script>
 </body>
