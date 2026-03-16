@@ -56,9 +56,9 @@ h1, h2, h3, h4, .font-georgia {
 }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-#settingsModal {
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
+/* Efeito de brilho para indicar IA Local */
+.ai-active {
+    box-shadow: 0 0 15px rgba(160, 196, 232, 0.5);
 }
 </style>
 </head>
@@ -67,73 +67,69 @@ h1, h2, h3, h4, .font-georgia {
 <div class="max-w-5xl mx-auto">
     
     <header class="text-center mb-12 mt-4">
-        <h1 class="text-5xl md:text-7xl font-bold text-vinho mb-4">FILTRO C.R.I.A.</h1>
+        <h1 class="text-5xl md:text-7xl font-bold text-vinho mb-4 uppercase">FILTRO C.R.I.A.</h1>
         <p class="text-xl md:text-2xl font-georgia mb-6 text-[#2b2b2b]">Humano vs IA: Onde investir o seu tempo?</p>
         <div class="w-24 h-1 bg-vinho mx-auto mb-6"></div>
-        <p class="text-lg max-w-2xl mx-auto">A IA não substitui quem pensa. <br><span class="font-bold">Substitui o tempo que você gasta sem pensar.</span></p>
+        <p class="text-lg max-w-2xl mx-auto">A IA não substitui quem pensa. <br><span class="font-bold italic">Substitui o tempo que você gasta sem pensar.</span></p>
     </header>
 
-    <!-- Simulador Principal -->
+    <!-- Simulador Principal com Motor Local -->
     <section class="mb-16">
-        <div class="card p-6 md:p-8 border-2 border-vinho bg-white relative overflow-hidden">
-            <div class="absolute top-0 right-0 bg-vinho text-white text-[10px] px-3 py-1 font-bold uppercase tracking-widest" id="modeBadge">Modo Demo</div>
+        <div class="card p-6 md:p-8 border-2 border-vinho bg-white relative overflow-hidden ai-active">
+            <div class="absolute top-0 right-0 bg-azul text-[#2b2b2b] text-[10px] px-3 py-1 font-bold uppercase tracking-widest">Motor C.R.I.A. Local ⚡</div>
             
-            <h2 class="text-3xl font-georgia mb-4 text-vinho">Simulador de Produtividade ✨</h2>
-            <p class="mb-6 text-sm text-gray-600">Escreva uma tarefa e deixe a IA de Mariana Piumbini decidir o seu destino.</p>
+            <h2 class="text-3xl font-georgia mb-4 text-vinho">Analisador Inteligente ✨</h2>
+            <p class="mb-6 text-sm text-gray-600 font-fira">Introduza uma tarefa e o motor local irá classificá-la instantaneamente.</p>
             
             <div class="flex flex-col md:flex-row gap-3 mb-6">
-                <input type="text" id="taskInput" placeholder="Ex: Criar roteiro de vídeo para o YouTube..." class="flex-1 p-4 border border-[#2b2b2b] rounded font-fira bg-[#fff8f5] focus:ring-2 focus:ring-vinho outline-none transition-all">
-                <button onclick="analyzeTask()" id="analyzeBtn" class="bg-vinho text-white px-8 py-4 font-bold uppercase hover:bg-black transition-all flex items-center justify-center gap-2">
-                    Analisar ✨
+                <input type="text" id="taskInput" placeholder="Ex: Escrever um artigo com a minha opinião sobre..." class="flex-1 p-4 border border-[#2b2b2b] rounded font-fira bg-[#fff8f5] focus:ring-2 focus:ring-vinho outline-none transition-all">
+                <button onclick="analyzeTaskLocal()" id="analyzeBtn" class="bg-vinho text-white px-8 py-4 font-bold uppercase hover:bg-black transition-all flex items-center justify-center gap-2">
+                    Analisar Agora
                 </button>
             </div>
 
-            <!-- Sugestões Rápidas para o utilizador -->
+            <!-- Exemplos -->
             <div class="flex flex-wrap gap-2 mb-8">
-                <button onclick="setTask('Dar opinião num post polémico sobre marketing')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-gray-100 transition-colors">Opinião Pessoal</button>
-                <button onclick="setTask('Traduzir este texto para 5 línguas diferentes')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-gray-100 transition-colors">Tradução em Massa</button>
-                <button onclick="setTask('Gerar 10 ideias de títulos para uma newsletter')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-gray-100 transition-colors">Brainstorming</button>
-                <button onclick="setTask('Organizar os ficheiros da pasta de projetos por data')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-gray-100 transition-colors">Organização</button>
+                <button onclick="setTask('Dar opinião num post polémico sobre marketing')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Opinião Pessoal</button>
+                <button onclick="setTask('Traduzir este texto para 5 línguas diferentes')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Tradução em Massa</button>
+                <button onclick="setTask('Gerar 10 ideias de títulos para uma newsletter')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Brainstorming</button>
+                <button onclick="setTask('Agendar todos os posts no LinkedIn para o mês')" class="text-[10px] border border-gray-300 px-2 py-1 rounded hover:bg-azul transition-colors italic">Automação</button>
             </div>
 
             <div id="resultArea" class="hidden">
                 <div class="p-6 rounded border border-[#2b2b2b] bg-[#fff8f5] transition-all">
                     <div id="loadingIndicator" class="hidden text-center py-4">
-                        <div class="loader mr-2"></div> A processar com inteligência...
+                        <div class="loader mr-2"></div> O motor está a processar...
                     </div>
                     <div id="analysisContent">
-                        <h3 id="resultCategory" class="text-2xl font-bold mb-2"></h3>
+                        <h3 id="resultCategory" class="text-2xl font-bold mb-2 text-vinho"></h3>
                         <p id="resultExplanation" class="text-gray-700 italic mb-4 leading-relaxed"></p>
-                        <button onclick="speakAnalysis()" id="ttsBtn" class="text-xs font-bold text-vinho uppercase tracking-widest flex items-center gap-2 hover:underline">
-                            <span>🔊</span> Ouvir com IA ✨
-                        </button>
+                        <div class="text-[10px] uppercase tracking-widest text-azul font-bold">Classificado por Algoritmo de Mariana Piumbini</div>
                     </div>
                 </div>
             </div>
-            <div id="errorMessage" class="hidden mt-4 p-4 bg-red-50 text-red-700 rounded text-xs"></div>
         </div>
     </section>
 
-    <!-- Visualizações de Dados -->
+    <!-- Visualizações (Chart.js) -->
     <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
         <div class="card p-6">
-            <h3 class="text-xl font-georgia font-bold mb-4 text-center">A Rotina Sem o Filtro</h3>
-            <p class="text-[10px] text-center mb-4 text-gray-500">Onde a maior parte do tempo é "desperdiçada" em repetição.</p>
+            <h3 class="text-xl font-georgia font-bold mb-4 text-center">Rotina Sem Filtro</h3>
             <div class="chart-container"><canvas id="timeChartBefore"></canvas></div>
         </div>
         <div class="card p-6 border-vinho">
-            <h3 class="text-xl font-georgia font-bold mb-4 text-center text-vinho">A Rotina Com C.R.I.A.</h3>
-            <p class="text-[10px] text-center mb-4 text-gray-500">Onde o foco volta para a criatividade humana.</p>
+            <h3 class="text-xl font-georgia font-bold mb-4 text-center text-vinho">Rotina Com C.R.I.A.</h3>
             <div class="chart-container"><canvas id="timeChartAfter"></canvas></div>
         </div>
     </section>
 
+    <!-- Estrutura do Framework -->
     <section class="mb-16">
         <h2 class="text-4xl font-georgia text-center mb-10">O Fluxo de Decisão</h2>
         <div class="max-w-2xl mx-auto space-y-4">
             <div class="card p-5 border-l-8 border-vinho flex gap-4 items-center">
                 <span class="text-5xl font-bold text-vinho">C</span>
-                <div><h4 class="font-bold">Criatividade</h4><p class="text-xs">Opinião, estratégia e repertório (Faço Eu).</p></div>
+                <div><h4 class="font-bold">Criatividade</h4><p class="text-xs">Opinião, estratégia e repertório (Humano).</p></div>
             </div>
             <div class="flow-arrow text-gray-300">↓</div>
             <div class="card p-5 border-l-8 border-azul flex gap-4 items-center">
@@ -153,179 +149,104 @@ h1, h2, h3, h4, .font-georgia {
         </div>
     </section>
 
-    <footer class="text-center py-12 border-t border-gray-200 mt-12 flex flex-col items-center">
+    <footer class="text-center py-12 border-t border-gray-200 mt-12">
         <p class="text-2xl font-georgia text-vinho font-bold">Mariana Piumbini</p>
-        <p class="uppercase tracking-widest text-[10px] text-gray-500 mb-4">Marketing & Estratégia Digital</p>
-        
-        <button onclick="toggleModal()" class="text-gray-300 hover:text-vinho transition-colors p-2" title="Definições de Administrador">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-        </button>
+        <p class="uppercase tracking-widest text-[10px] text-gray-500 mb-2">Marketing & Estratégia Digital</p>
+        <p class="text-[9px] text-gray-400">Este site utiliza processamento local. Nenhuma API externa é necessária.</p>
     </footer>
 </div>
 
-<!-- Modal de Administrador -->
-<div id="settingsModal" class="fixed inset-0 hidden z-50 flex items-center justify-center p-4">
-    <div class="card w-full max-w-sm p-6">
-        <h3 class="font-bold text-lg mb-4">Acesso de Administrador</h3>
-        <p class="text-xs text-gray-500 mb-4">Configura a tua API Key aqui para as demonstrações. Se o repositório for público, a Google poderá desativar a chave após algum tempo.</p>
-        <input type="password" id="modalKeyInput" class="w-full p-3 border rounded text-sm mb-4" placeholder="Cola a tua Gemini API Key...">
-        <div class="flex gap-2">
-            <button onclick="saveApiKey()" class="bg-vinho text-white px-4 py-2 rounded text-xs font-bold w-full uppercase">Salvar</button>
-            <button onclick="toggleModal()" class="border px-4 py-2 rounded text-xs w-full uppercase text-gray-400">Fechar</button>
-        </div>
-    </div>
-</div>
-
 <script>
-/** * CONFIGURAÇÃO OPCIONAL: 
- * Se quiseres correr o risco de a chave ser desativada mas queres que funcione 
- * de imediato, podes colar a chave abaixo entre as aspas.
- */
-const EMBEDDED_KEY = ""; 
-
-let currentApiKey = localStorage.getItem('gemini_api_key') || EMBEDDED_KEY;
-
-function toggleModal() {
-    const m = document.getElementById('settingsModal');
-    m.classList.toggle('hidden');
-    if (!m.classList.contains('hidden')) {
-        document.getElementById('modalKeyInput').value = currentApiKey;
-    }
-}
-
-function saveApiKey() {
-    const val = document.getElementById('modalKeyInput').value.trim();
-    currentApiKey = val;
-    localStorage.setItem('gemini_api_key', val);
-    updateModeBadge();
-    toggleModal();
-}
-
-function updateModeBadge() {
-    const b = document.getElementById('modeBadge');
-    if (currentApiKey) {
-        b.innerText = "IA Ativa ✨";
-        b.classList.replace('bg-vinho', 'bg-green-600');
-    } else {
-        b.innerText = "Modo Demo";
-        b.classList.replace('bg-green-600', 'bg-vinho');
-    }
-}
-
 function setTask(text) {
     document.getElementById('taskInput').value = text;
 }
 
-// Base de dados interna para o "Modo Demo" (UX imediata)
-const mockDatabase = {
-    "opinião": { c: "C - Criatividade", e: "O teu posicionamento é insubstituível. IA não tem valores nem ética própria." },
-    "artigo": { c: "I - Inteligência", e: "Usa a IA para estruturar os tópicos e tu dás o toque final de autoridade." },
-    "traduzir": { c: "R - Repetição", e: "Isto é uma tarefa técnica pura. Deixa que a IA faça o trabalho pesado." },
-    "agendar": { c: "A - Ação", e: "Agendamento é operacional. Automatiza para focar no que importa." },
-    "brainstorm": { c: "I - Inteligência", e: "A IA é o teu melhor 'sparring partner' para gerar volume de ideias." },
-    "organizar": { c: "A - Ação", e: "Rotinas de organização são processos repetitivos. Delegar à automação." }
-};
-
-async function analyzeTask() {
+/**
+ * MOTOR DE INTELIGÊNCIA LOCAL C.R.I.A.
+ * Classificador baseado em heurística de NLP para evitar dependência de APIs externas.
+ */
+function analyzeTaskLocal() {
     const task = document.getElementById('taskInput').value.toLowerCase().trim();
     if (!task) return;
 
     const resultArea = document.getElementById('resultArea');
     const loading = document.getElementById('loadingIndicator');
     const content = document.getElementById('analysisContent');
-    const errorMsg = document.getElementById('errorMessage');
 
     resultArea.classList.remove('hidden');
     loading.classList.remove('hidden');
     content.classList.add('hidden');
-    errorMsg.classList.add('hidden');
 
-    if (!currentApiKey) {
-        // MODO DEMO - Simula inteligência para o utilizador comum
-        setTimeout(() => {
-            let found = false;
-            for (let key in mockDatabase) {
-                if (task.includes(key)) {
-                    document.getElementById('resultCategory').innerText = mockDatabase[key].c;
-                    document.getElementById('resultExplanation').innerText = mockDatabase[key].e;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                document.getElementById('resultCategory').innerText = "C ou I - Estratégico";
-                document.getElementById('resultExplanation').innerText = "Esta tarefa parece exigir o teu discernimento criativo aliado a uma ferramenta de aceleração tecnológica.";
-            }
-            loading.classList.add('hidden');
-            content.classList.remove('hidden');
-        }, 1200);
-        return;
-    }
+    // Simula um tempo de "pensamento" para o utilizador
+    setTimeout(() => {
+        let category = "";
+        let explanation = "";
 
-    // MODO IA REAL
-    const systemPrompt = `Framework Filtro C.R.I.A (Mariana Piumbini). Categorias: C (Criatividade), R (Repetição), I (Inteligência), A (Ação). Responda JSON: { "categoria": "C, R, I ou A", "titulo": "nome", "explicacao": "frase" }`;
-    try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${currentApiKey}`;
-        const response = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: task }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: { responseMimeType: "application/json" }
-            })
-        });
-        const data = await response.json();
-        const res = JSON.parse(data.candidates[0].content.parts[0].text);
-        document.getElementById('resultCategory').innerText = `${res.categoria} - ${res.titulo}`;
-        document.getElementById('resultExplanation').innerText = res.explicacao;
+        // Lógica de classificação por palavras-chave
+        const keywords = {
+            c: ['opinião', 'estratégia', 'ângulo', 'posicionamento', 'decisão', 'crítica', 'autoral', 'pessoal', 'visão', 'ética'],
+            r: ['traduzir', 'tradução', 'reformatar', 'resumir', 'resumo', 'transcrever', 'organizar', 'dados', 'limpar', 'converter'],
+            i: ['ideias', 'brainstorm', 'títulos', 'assuntos', 'roteiro', 'estrutura', 'pesquisa', 'análise', 'métricas', 'performance'],
+            a: ['agendar', 'postar', 'publicar', 'calendário', 'email', 'automatizar', 'ferramenta', 'fluxo', 'operação']
+        };
+
+        if (keywords.c.some(k => task.includes(k))) {
+            category = "C - Criatividade (Humano)";
+            explanation = "Esta tarefa exige o teu olhar único, valores e posicionamento. A IA não consegue replicar o teu repertório pessoal.";
+        } else if (keywords.r.some(k => task.includes(k))) {
+            category = "R - Repetição (IA)";
+            explanation = "Tarefa puramente técnica ou de conversão. Delega à IA para poupares a tua energia criativa para o que importa.";
+        } else if (keywords.i.some(k => task.includes(k))) {
+            category = "I - Inteligência (Híbrido)";
+            explanation = "O cenário ideal: tu defines a direção e a IA acelera o processo gerando volume de ideias ou estruturando o caminho.";
+        } else if (keywords.a.some(k => task.includes(k))) {
+            category = "A - Ação (Automação)";
+            explanation = "Isto é operacional puro. Usa ferramentas de automação para que este processo ocorra sem a tua intervenção direta.";
+        } else {
+            category = "C ou I - Análise Necessária";
+            explanation = "Esta tarefa parece envolver uma mistura de estratégia e execução. Avalia se a IA pode estruturar o rascunho antes de dares o teu toque final.";
+        }
+
+        document.getElementById('resultCategory').innerText = category;
+        document.getElementById('resultExplanation').innerText = explanation;
+        
         loading.classList.add('hidden');
         content.classList.remove('hidden');
-    } catch (err) {
-        loading.classList.add('hidden');
-        errorMsg.innerText = "A chave de IA expirou ou é inválida. Tenta o Modo Demo ou insere uma nova chave.";
-        errorMsg.classList.remove('hidden');
-    }
-}
-
-async function speakAnalysis() {
-    if (!currentApiKey) {
-        alert("Ouvir com voz de IA requer uma chave ativa nas definições de administrador.");
-        return;
-    }
-    const text = document.getElementById('resultExplanation').innerText;
-    try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${currentApiKey}`;
-        const response = await fetch(url, {
-            method: 'POST',
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: `Diz com entusiasmo e clareza: ${text}` }] }],
-                generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Puck" } } } }
-            })
-        });
-        const d = await response.json();
-        const base64Audio = d.candidates[0].content.parts[0].inlineData.data;
-        const binaryString = window.atob(base64Audio);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) bytes[i] = binaryString.charCodeAt(i);
-        const wavHeader = new ArrayBuffer(44);
-        const view = new DataView(wavHeader);
-        view.setUint32(0, 0x46464952, true); view.setUint32(4, 36 + bytes.length, true); view.setUint32(8, 0x45564157, true);
-        view.setUint32(12, 0x20746d66, true); view.setUint32(16, 16, true); view.setUint16(20, 1, true); view.setUint16(22, 1, true);
-        view.setUint32(24, 24000, true); view.setUint32(28, 48000, true); view.setUint16(32, 2, true); view.setUint16(34, 16, true);
-        view.setUint32(36, 0x61746164, true); view.setUint32(40, bytes.length, true);
-        const audioUrl = URL.createObjectURL(new Blob([wavHeader, bytes.buffer], { type: 'audio/wav' }));
-        new Audio(audioUrl).play();
-    } catch (err) { console.error(err); }
+    }, 1000);
 }
 
 window.onload = function() {
-    updateModeBadge();
-    const labels = [['C'], ['R'], ['I'], ['A']];
-    new Chart(document.getElementById('timeChartBefore'), { type: 'doughnut', data: { labels, datasets: [{ data: [15, 45, 10, 30], backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'] }] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false } } } });
-    new Chart(document.getElementById('timeChartAfter'), { type: 'doughnut', data: { labels, datasets: [{ data: [45, 10, 35, 10], backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'] }] }, options: { maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    const chartOptions = {
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        cutout: '70%'
+    };
+
+    new Chart(document.getElementById('timeChartBefore'), {
+        type: 'doughnut',
+        data: {
+            labels: ['C', 'R', 'I', 'A'],
+            datasets: [{
+                data: [15, 45, 10, 30],
+                backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'],
+                borderWidth: 0
+            }]
+        },
+        options: chartOptions
+    });
+
+    new Chart(document.getElementById('timeChartAfter'), {
+        type: 'doughnut',
+        data: {
+            labels: ['C', 'R', 'I', 'A'],
+            datasets: [{
+                data: [45, 10, 35, 10],
+                backgroundColor: ['#86143d', '#a0c4e8', '#c495a6', '#2b2b2b'],
+                borderWidth: 0
+            }]
+        },
+        options: chartOptions
+    });
 }
 </script>
 </body>
